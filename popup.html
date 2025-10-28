@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phrase Generator</title>
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-light: #64748b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --modal-bg: rgba(0, 0, 0, 0.5);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 16px;
+            width: 420px;
+            min-height: 400px;
+        }
+        .container {
+            width: 100%;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+        .btn {
+            display: inline-block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+        }
+        .btn:hover {
+            background-color: #f9fafb;
+            border-color: #cbd5e1;
+        }
+        .btn-primary {
+            background-color: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+        .btn-secondary {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+        }
+        .btn-sm {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        @media (min-width: 380px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: var(--shadow);
+        }
+        .card-header {
+            margin-bottom: 12px;
+        }
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        .result-box {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            min-height: 50px;
+            margin-bottom: 12px;
+            word-wrap: break-word;
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .footer {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .diag-btn {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .diag-btn:hover {
+            color: var(--accent);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: var(--modal-bg);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--bg-secondary);
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 450px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .modal-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        .modal-close {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-body {
+            font-size: 0.875rem;
+        }
+        .modal-body pre {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .modal-body label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 4px;
+            margin-top: 12px;
+        }
+        .modal-body input[type="text"],
+        .modal-body textarea {
+            width: 95%;
+            padding: 8px;
+            font-size: 0.875rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--bg-primary);
+        }
+        .modal-body textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .modal-footer {
+            margin-top: 16px;
+            text-align: right;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phrase Generator</h1>
+        <p>Generate phrases, manage libraries, and copy what you need.</p>
+
+        <div class="button-group" style="margin-bottom: 16px;">
+            <button id="generate-all" class="btn btn-primary">Generate All Four</button>
+            <button id="copy-all-libraries" class="btn btn-secondary">Copy All Libraries</button>
+            <button id="add-new-category" class="btn btn-secondary">+ Add New Category</button>
+        </div>
+
+        <div id="generators-container" class="grid-container">
+            <!-- Generators will be injected here -->
+        </div>
+
+        <div class="footer">
+            <button id="diag-btn" class="diag-btn">Run Diagnostics (v1.2.2)</button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="diag-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Diagnostics Report</h2>
+                <span class="modal-close" id="diag-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <pre id="diag-content"></pre>
+            </div>
+            <div class="modal-footer">
+                <button id="diag-copy" class="btn btn-secondary">Copy Report</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-phrase-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Phrase</h2>
+                <span class="modal-close" id="add-phrase-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Add a new phrase variation. (Max 1000)</p>
+                <label for="new-phrase-input">New Phrase:</label>
+                <textarea id="new-phrase-input" rows="3"></textarea>
+                <input type="hidden" id="add-phrase-category">
+            </div>
+            <div class="modal-footer">
+                <button id="add-phrase-cancel" class="btn">Cancel</button>
+                <button id="add-phrase-save" class="btn btn-primary">Save Phrase</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-category-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Category</h2>
+                <span class="modal-close" id="add-category-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Add a new phrase category. (Max 10 total)</p>
+                <label for="new-category-name">New Category Name:</label>
+                <input type="text" id="new-category-name" placeholder="e.g., Our Mission">
+                <label for="new-category-phrase">First Phrase:</label>
+                <textarea id="new-category-phrase" rows="3" placeholder="e.g., Our mission is to deliver excellence."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="add-category-cancel" class="btn">Cancel</button>
+                <button id="add-category-save" class="btn btn-primary">Save Category</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="copy-toast" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #22c55e; color: white; padding: 10px 20px; border-radius: 6px; box-shadow: var(--shadow); font-size: 0.875rem;">
+        Copied!
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>

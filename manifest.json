@@ -1,14 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Professional Phrase Generator",
-  "version": "1.2.3",
-  "description": "Generate, save, and manage professional phrases.",
+  "version": "2.0.0",
+  "description": "Generate, save, and manage professional phrases in a persistent window.",
   "permissions": [
     "storage",
-    "clipboardWrite"
+    "clipboardWrite",
+    "windows"
   ],
-  "action": {
-    "default_popup": "popup.html"
-  }
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {}
 }
-

@@ -24,7 +24,8 @@
             margin: 0;
             padding: 16px;
             width: 420px;
-            min-height: 400px;
+            min-height: 580px;
+            box-sizing: border-box;
         }
         .container {
             width: 100%;
@@ -91,6 +92,17 @@
             border-radius: 8px;
             padding: 12px;
             box-shadow: var(--shadow);
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+        .card.dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+            cursor: grabbing;
+        }
+        .card.drag-over {
+            border-top: 2px solid var(--accent);
+            background-color: #f4f8ff;
         }
         .card-header {
             margin-bottom: 12px;
@@ -99,6 +111,7 @@
             font-size: 0.875rem;
             font-weight: 600;
             margin: 0;
+            pointer-events: none; /* Prevents text selection during drag */
         }
         .result-box {
             background-color: var(--bg-primary);
@@ -190,6 +203,8 @@
             padding: 12px;
             white-space: pre-wrap;
             word-wrap: break-word;
+            max-height: 40vh;
+            overflow-y: auto;
         }
         .modal-body label {
             display: block;
@@ -222,10 +237,10 @@
 <body>
     <div class="container">
         <h1>Phrase Generator</h1>
-        <p>Generate phrases, manage libraries, and copy what you need.</p>
+        <p>Drag cards to reorder. Your layout will be saved.</p>
 
         <div class="button-group" style="margin-bottom: 16px;">
-            <button id="generate-all" class="btn btn-primary">Generate All Four</button>
+            <button id="generate-all" class="btn btn-primary">Generate All</button>
             <button id="copy-all-libraries" class="btn btn-secondary">Copy All Libraries</button>
             <button id="add-new-category" class="btn btn-secondary">+ Add New Category</button>
         </div>
@@ -235,7 +250,7 @@
         </div>
 
         <div class="footer">
-            <button id="diag-btn" class="diag-btn">Run Diagnostics (v1.2.2)</button>
+            <button id="diag-btn" class="diag-btn">Run Diagnostics (v2.0.0)</button>
         </div>
     </div>
 
@@ -243,14 +258,14 @@
     <div id="diag-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Diagnostics Report</h2>
+                <h2 class="modal-title">Diagnostics Log (Last 30 Days)</h2>
                 <span class="modal-close" id="diag-close">&times;</span>
             </div>
             <div class="modal-body">
                 <pre id="diag-content"></pre>
             </div>
             <div class="modal-footer">
-                <button id="diag-copy" class="btn btn-secondary">Copy Report</button>
+                <button id="diag-copy" class="btn btn-secondary">Copy Log</button>
             </div>
         </div>
     </div>
